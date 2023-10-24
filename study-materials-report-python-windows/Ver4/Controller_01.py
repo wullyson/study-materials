@@ -8,6 +8,8 @@ from image_00 import Ui_MainWindow as Ui_Window0
 from image_02 import Ui_MainWindow as Ui_Window2
 from image_03 import Ui_MainWindow as Ui_Window3
 import socket
+from sender import sender 
+from receive import receive
 
 class Window0(QMainWindow):
     def __init__(self):
@@ -17,10 +19,11 @@ class Window0(QMainWindow):
         self.ui.PushBotton_get.clicked.connect(self.capture_and_display_image) 
         self.ui.PushBotton_cancel.clicked.connect(self.pause_resume_camera) 
         self.ui.PushBotton_correct.clicked.connect(self.closeEvent)
-        self.ui.PushBotton_jp.clicked.connect(self.open_window2)
-        self.ui.PushBotton_kr.clicked.connect(self.open_window3)
+        self.ui.comboBox_hairstyle.currentIndexChanged.connect(self.open_window2)
+       ## self.ui.PushBotton_kr.clicked.connect(self.open_window3)
         
         self.label_capture = self.findChild(QLabel, "Label_capture")
+        self.Label_after = self.findChild(QLabel,"Label_after")
         self.vid_cam = cv2.VideoCapture(0)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
@@ -78,14 +81,9 @@ class Window0(QMainWindow):
         self.is_paused = False
 
     def closeEvent(self,event):
-        photo_filename = 'captured_image.jpg'
-        with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
-            s.connect(("172.20.10.3",1234))
-            with open(photo_filename, 'rb') as file:
-                image_data = file.read()
-                s.sendall(image_data)
-                print("图像文件已发送")
-        self.vid_cam.release()    
+        
+        self.Label_after.setPixmap(QPixmap('receive_image.jpg'))
+        self.vid_cam.release()  
 
     def open_window2(self):
         self.window2 = Window2()
