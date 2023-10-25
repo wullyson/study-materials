@@ -4,7 +4,7 @@ import socket
 def receive():
 # 创建套接字
     with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
-        s.bind(("0.0.0.0",12340))
+        s.bind(("0.0.0.0",1234))
         s.listen()
         print("等待连接...")
         connection, client_address = s.accept()

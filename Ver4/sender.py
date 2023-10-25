@@ -3,7 +3,7 @@ import socket
 def sender():
         photo_filename = "captured_image.jpg"
         with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
-                s.connect(("25.21.22.74",12340))
+                s.connect(("25.21.22.74",1234))
                 
                 # 发送图像文件到另一个程序
                 with open(photo_filename, 'rb') as file:

@@ -13,15 +13,14 @@ from receive import receive
 
 class Window0(QMainWindow):
     def __init__(self):
+        self.pictu = False
         super().__init__()
         self.ui = Ui_Window0()
         self.ui.setupUi(self)
         self.ui.PushBotton_get.clicked.connect(self.capture_and_display_image) 
         self.ui.PushBotton_cancel.clicked.connect(self.pause_resume_camera) 
         self.ui.PushBotton_correct.clicked.connect(self.closeEvent)
-        self.ui.comboBox_hairstyle.currentIndexChanged.connect(self.open_window2)
-       ## self.ui.PushBotton_kr.clicked.connect(self.open_window3)
-        
+        self.ui.comboBox_hairstyle.currentIndexChanged.connect(self.handle_hairstyle_selection)
         self.label_capture = self.findChild(QLabel, "Label_capture")
         self.Label_after = self.findChild(QLabel,"Label_after")
         self.vid_cam = cv2.VideoCapture(0)
@@ -30,7 +29,11 @@ class Window0(QMainWindow):
         self.timer.start(100)
         self.image_frame = None  
         self.is_paused = False
-        
+    def handle_hairstyle_selection(self, index):
+        if index == 2:  # 1表示韓式髮型
+            self.open_window2()
+        elif index == 1:  # 2表示日式髮型
+            self.open_window3() 
     def update_frame(self):
         if not self.is_paused:
             ret, image_frame = self.vid_cam.read()
@@ -39,11 +42,12 @@ class Window0(QMainWindow):
                 image_rectangle = cv2.cvtColor(image_frame, cv2.COLOR_BGR2RGB)
                 #####方塊
                 gary = cv2.cvtColor(image_frame,cv2.COLOR_RGB2GRAY)
-                facecascade = cv2.CascadeClassifier('haarcascade_frontalface_alt2.xml')
+                facecascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt2.xml')
                 facereport = facecascade.detectMultiScale(gary,1.1,4)
                 bfx,bfy,bfw,bfh=0,0,0,0
                 cropped_face = image_frame
-                if len(facereport) > 0:
+                if len(facereport) == 1:
+                    self.pictu = True
                     most = 0
                     largest_face = None
                     for (x, y, w, h) in facereport:
@@ -51,14 +55,18 @@ class Window0(QMainWindow):
                          if face_size > most:
                              most = face_size
                              largest_face = (x, y, w, h)
-
                     bfx, bfy, bfw, bfh = largest_face
                     if most < 350:
                         cv2.rectangle(image_rectangle, (bfx, bfy), (bfx + bfw, bfy + bfh), (0, 0, 255), 2)
-                        print("small")
+                        self.pictu = False
                     else:
                         cv2.rectangle(image_rectangle, (bfx, bfy), (bfx + bfw, bfy + bfh), (0, 255, 0), 2)
-                        cropped_face = image_frame[y-100:y+h+50, x-50:x+w+50]
+                        # cropped_face = image_frame[y-90:y+h+60, x-80:x+w+107]
+
+                elif len(facereport) > 1 :
+                    self.pictu = False
+                else :
+                    self.pictu = False
                 #####
                 height, width, channel = image_rectangle.shape
                 bytes_per_line = 3 * width
@@ -67,24 +75,26 @@ class Window0(QMainWindow):
                 pixmap = QPixmap.fromImage(q_image)
                 self.label_capture.setPixmap(pixmap)
                 self.label_capture.setAlignment(Qt.AlignCenter)
-                self.image_frame = cropped_face  
+                self.image_frame = image_frame 
 
     def capture_and_display_image(self):
-        self.is_paused = True
-        if self.image_frame is not None:         
-            image_rgb = cv2.cvtColor(self.image_frame, cv2.COLOR_BGR2RGB)
-            cv2.imwrite('captured_image.jpg', image_rgb)
-            self.update_frame()
-            self.label_capture.setPixmap(QPixmap('captured_image.jpg'))
+        if self.pictu == True:
+            self.is_paused = True
+            if self.image_frame is not None:         
+                image_rgb = cv2.cvtColor(self.image_frame, cv2.COLOR_BGR2RGB)
+                cv2.imwrite('captured_image.jpg', image_rgb)
+                self.update_frame()
+                self.label_capture.setPixmap(QPixmap('captured_image.jpg'))
         
     def pause_resume_camera(self):
         self.is_paused = False
 
     def closeEvent(self,event):
-        
-        self.Label_after.setPixmap(QPixmap('receive_image.jpg'))
-        self.vid_cam.release()  
-
+        if self.is_paused :
+            sender()
+            receive()
+            self.Label_after.setPixmap(QPixmap('receive_image.jpg'))
+            self.vid_cam.release()
     def open_window2(self):
         self.window2 = Window2()
         self.window2.show()

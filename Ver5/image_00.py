@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QComboBox
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1500, 1000)
+        MainWindow.resize(1400, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
         self.label.setLineWidth(1)
         self.label.setObjectName("label")
         self.Label_capture = QtWidgets.QLabel(self.centralwidget)
-        self.Label_capture.setGeometry(QtCore.QRect(20, 140, 421, 581))
+        self.Label_capture.setGeometry(QtCore.QRect(50, 140, 600, 480))
         font = QtGui.QFont()
         font.setFamily("隨峰體")
         font.setPointSize(24)
@@ -49,8 +49,9 @@ class Ui_MainWindow(object):
         self.comboBox_hairstyle = QComboBox(self.centralwidget)
         self.comboBox_hairstyle.setGeometry(QtCore.QRect(680, 500, 93, 31))
         self.comboBox_hairstyle.setObjectName("comboBox_hairstyle")
-        self.comboBox_hairstyle.addItem("選擇髮型")
-
+        self.comboBox_hairstyle.addItem("選擇髮型....")
+        self.comboBox_hairstyle.addItem("韓式髮型")
+        self.comboBox_hairstyle.addItem("日式髮型")
         
         self.PushBotton_cancel = QtWidgets.QPushButton(self.centralwidget)
         self.PushBotton_cancel.setGeometry(QtCore.QRect(680, 240, 93, 71))
@@ -81,6 +82,7 @@ class Ui_MainWindow(object):
         self.PushBotton_get.setText(_translate("MainWindow", "拍照"))
 
 
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -88,8 +90,4 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    
-    # 在if __name__ == "__main__": 块中调用 setup_hairstyle_options 方法
     sys.exit(app.exec_())
-    ui.setup_hairstyle_options()
-    
