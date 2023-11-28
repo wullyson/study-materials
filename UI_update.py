@@ -38,7 +38,7 @@ class Ui_MainWindow(object):
             self.gridLayout.setColumnStretch(i, 1)
 
        
-        photo_folder = "C:/NKUST/UI"
+        photo_folder = "C:/study-materials-report-python-windows/Ver4"
         self.button_group = QtWidgets.QButtonGroup()  
         for i in range(30):
             photo_path = f"{photo_folder}/photo{i+1}.jpg"
@@ -92,13 +92,13 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
+       
         #拍照鍵
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(700, 490, 31, 31))
         self.pushButton_2.setText("")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("C:/NKUST/UI/captur_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("C:/study-materials-report-python-windows/Ver4/captur_icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.pushButton_2.setIcon(icon)
         self.pushButton_2.setIconSize(QtCore.QSize(200, 200))
         self.pushButton_2.setObjectName("pushButton_2")
